@@ -11,20 +11,21 @@ int main()
 
     kn::window::init({200, 150}, "Topdown Shooter", 4);
     kn::Event event;
-    kn::time::Clock clock;
+    kn::Clock clock;
 
     Player player;
 
     std::vector<Bullet> bullets;
     std::vector<Enemy> enemies;
-    enemies.push_back(Enemy());
+    kn::Timer spawnTimer(0.75);
+    spawnTimer.start();
 
     kn::AnimationController enemyAnim;
     enemyAnim.loadSpriteSheet("walk", "../assets/chk_walk.png", {16, 16}, 4);
 
     while (kn::window::isOpen())
     {
-        const double dt = clock.tick() / 1000;
+        const double dt = clock.tick();
         while (kn::window::pollEvent(event))
         {
             if (event.type == kn::MOUSEBUTTONDOWN)
@@ -39,11 +40,29 @@ int main()
 
         player.update(dt);
 
-        const kn::Frame* currFrame = enemyAnim.nextFrame(dt);
-        for (Enemy &enemy : enemies)
+        if (spawnTimer.isFinished())
         {
-            enemy.update(dt, player.getPos(), currFrame);
+            enemies.push_back(Enemy());
+            spawnTimer.start();
         }
+
+        const kn::Frame* currFrame = enemyAnim.nextFrame(dt);
+        size_t enemyRemoveIdx = -1;
+        for (size_t i = 0; i < enemies.size(); i++)
+        {
+            auto &enemy = enemies.at(i);
+            enemy.update(dt, player.getPos(), currFrame);
+            if (enemy.isDead(bullets))
+            {
+                enemyRemoveIdx = i;
+            }
+            if (player.getRect().collidePoint(enemy.getPos()))
+            {
+                kn::window::close();
+            }
+        }
+        if (enemyRemoveIdx != -1)
+            enemies.erase(enemies.begin() + enemyRemoveIdx);
 
         size_t bulletRemoveIdx = -1;
         for (size_t i = 0; i < bullets.size(); i++)

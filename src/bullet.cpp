@@ -1,6 +1,6 @@
 #include "Bullet.hpp"
 
-Bullet::Bullet(const kn::math::Vec2 &spawnPos)
+Bullet::Bullet(const kn::Vec2 &spawnPos)
     : pos(spawnPos)
 {
     const auto target = kn::mouse::getPos();
@@ -20,7 +20,7 @@ bool Bullet::outOfBounds() const
             pos.y < 0 || pos.y > winSize.y);
 }
 
-const kn::math::Vec2 &Bullet::getPos() const
+const kn::Vec2 &Bullet::getPos() const
 {
     return pos;
 }

@@ -2,14 +2,14 @@
 
 Player::Player() : pos(kn::window::getSize() / 2)
 {
-    rect.size({48, 48});
-    anim.loadSpriteSheet("walk", "../assets/player_walk.png", {48, 48}, 10);
+    rect.size({16, 16});
+    anim.loadSpriteSheet("walk", "../assets/player_walk.png", {16, 16}, 10);
 }
 
 void Player::update(const double dt)
 {
     const auto* keys = kn::key::getPressed();
-    kn::math::Vec2 dirVec = {
+    kn::Vec2 dirVec = {
         keys[kn::S_d] - keys[kn::S_a],
         keys[kn::S_s] - keys[kn::S_w]
     };
@@ -23,7 +23,12 @@ void Player::update(const double dt)
     kn::window::blit(*currFrame->tex, rect, currFrame->rect);
 }
 
-kn::math::Vec2 Player::getPos() const
+kn::Vec2 Player::getPos() const
 {
     return pos;
+}
+
+kn::Rect Player::getRect() const
+{
+    return rect;
 }

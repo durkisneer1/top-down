@@ -9,11 +9,13 @@ public:
 
     void update(double dt);
 
-    kn::math::Vec2 getPos() const;
+    kn::Vec2 getPos() const;
+
+    kn::Rect getRect() const;
 
 private:
     kn::AnimationController anim;
     kn::Rect rect;
-    kn::math::Vec2 pos;
+    kn::Vec2 pos;
     const double speed = 100;
 };

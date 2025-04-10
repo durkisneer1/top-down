@@ -28,27 +28,31 @@ Enemy::Enemy()
     }
 }
 
-void Enemy::update(const double dt, const kn::math::Vec2 &target, const kn::Frame *frame)
+void Enemy::update(const double dt, const kn::Vec2 &target, const kn::Frame *frame)
 {
-    auto diff = target - pos;
-    if (diff.getLength() > 30)
-    {
-        auto dirVec = kn::math::normalize(diff);
-        pos += dirVec * speed * dt;
-        rect.center(pos);
-    }
+    auto dirVec = kn::math::normalize(target - pos);
+    pos += dirVec * speed * dt;
+    rect.center(pos);
 
     kn::window::blit(*frame->tex, rect, frame->rect);
 }
 
-bool Enemy::isHit(const std::vector<Bullet> &bullets)
+bool Enemy::isDead(std::vector<Bullet> &bullets)
 {
-    for (const Bullet &bullet : bullets)
+    for (size_t i = 0; i < bullets.size(); i++)
     {
+        auto &bullet = bullets.at(i);
         if ((bullet.getPos() - pos).getLength() < (bullet.radius + radius))
         {
-            return true;
+            bullets.erase(bullets.begin() + i);
+            health--;
+            return health == 0;
         }
     }
     return false;
+}
+
+kn::Vec2 Enemy::getPos() const
+{
+    return pos;
 }

@@ -10,14 +10,17 @@ public:
     Enemy();
     ~Enemy() = default;
 
-    void update(double dt, const kn::math::Vec2 &target, const kn::Frame* frame);
+    void update(double dt, const kn::Vec2 &target, const kn::Frame* frame);
 
-    bool isHit(const std::vector<Bullet>& bullets);
+    bool isDead(std::vector<Bullet>& bullets);
+
+    kn::Vec2 getPos() const;
 
     double radius = 10.0;
 
 private:
-    kn::math::Vec2 pos;
+    kn::Vec2 pos;
     kn::Rect rect;
-    double speed = 80;
+    double speed = 40;
+    int health = 2;
 };

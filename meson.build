@@ -3,7 +3,9 @@ project(
     'cpp',
     default_options: ['cpp_std=c++17', 'default_library=static'],
 )
-kraken_dep = dependency('kraken-engine')
+
+kraken_proj = subproject('kraken-engine')
+kraken_dep = kraken_proj.get_variable('kraken_engine_dep')
 
 inc = include_directories('include')
 src = [
